@@ -12,7 +12,9 @@ const FILES = [
 export async function main(ns) {
     const branchArg = ns.args.find(arg => arg.startsWith('-b=') || arg.startsWith('--branch='));
     const branch = branchArg ? branchArg.split('=')[1] : GIT_BRANCH;
-    FILES.forEach(path =>{
-        ns.wget(`${GIT_ROOT}/${branch}/${path}.js`, `${BITBURNER_ROOT}/${path}`);
-    });
+    const paths = FILES.slice();
+    while (paths.length) {
+        const path = paths.pop();
+        await ns.wget(`${GIT_ROOT}/${branch}/${path}.js`, `${BITBURNER_ROOT}/${path}`);
+    }
 }
