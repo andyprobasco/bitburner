@@ -1,13 +1,18 @@
-const GIT_ROOT = '';
-const BITBURNER_ROOT = '/rsync/';
+const GIT_ROOT = 'https://raw.githubusercontent.com/andyprobasco/bitburner'
+const GIT_BRANCH = 'master'
+const BITBURNER_ROOT = '/rsync';
 const FILES = [
-    'scripts/hack',
-    'scripts/weaken',
-    'scripts/grow',
+    'scripts/hack.script',
+    'scripts/weaken.script',
+    'scripts/grow.script',
 ]
 
+
+
 export async function main(ns) {
-    FILES.forEach(filePath =>{
-        ns.wget(`${GIT_ROOT}${filePath}.js`, `${BITBURNER_ROOT}${filePath}.ns`);
+    const branchArg = ns.args.find(arg => arg.startsWith('-b=') || arg.startsWith('--branch='));
+    const branch = branchArg ? branchArg.split('=')[1] : GIT_BRANCH;
+    FILES.forEach(path =>{
+        ns.wget(`${GIT_ROOT}/${branch}/${filePath}.js`, `${BITBURNER_ROOT}/${path}`);
     });
 }
