@@ -1,0 +1,3 @@
+const HACK_SECURITY = 0.002;
+const GROW_SECURITY = 0.004;
+const WEAKEN_SECURITY = -0.05;
