@@ -1,6 +1,19 @@
 // Contract solutions basically just ripped from the source code
+import { hostnames } from "/rsync/src/models/Server.ns";
 
 export class Contract {
+  static solveAll(ns) {
+    let contractsFound = 0;
+    hostnames.forEach((hostname) => {
+      const contractFiles = ns.ls(hostname, ".cct");
+      contractFiles.forEach((contractFile) => {
+        const contract = new Contract(ns, contractFile, hostname);
+        contractsFound++;
+        contract.solve(ns);
+      });
+    });
+    ns.tprint(`${contractsFound} Contracts found in total`);
+  }
   constructor(ns, file, host) {
     this.host = host;
     this.file = file;
@@ -30,41 +43,6 @@ export class Contract {
   }
 }
 
-// export type GeneratorFunc = () => any;
-
-// /* Function that checks if the provided solution is the correct one */
-// export type SolverFunc = (data: any, answer: string) => boolean;
-
-// /* Function that returns a string with the problem's description.
-//    Requires the 'data' of a Contract as input */
-// export type DescriptionFunc = (data: any) => string;
-
-// export interface ICodingContractTypeMetadata {
-//     desc: DescriptionFunc;
-//     difficulty: number;
-//     gen: GeneratorFunc;
-//     name: string;
-//     numTries: number;
-//     solver: SolverFunc;
-// }
-
-// /* Helper functions for Coding Contract implementations */
-// function removeBracketsFromArrayString(str: string) {
-//     let strCpy: string = str;
-//     if (strCpy.startsWith("[")) { strCpy = strCpy.slice(1); }
-//     if (strCpy.endsWith("]")) { strCpy = strCpy.slice(0, -1); }
-
-//     return strCpy;
-// }
-
-// function removeQuotesFromString(str: string) {
-//     let strCpy: string = str;
-//     if (strCpy.startsWith('"') || strCpy.startsWith("'")) { strCpy = strCpy.slice(1); }
-//     if (strCpy.endsWith('"') || strCpy.endsWith("'")) { strCpy = strCpy.slice(0, -1); }
-
-//     return strCpy;
-// }
-
 function convert2DArrayToString(arr) {
   const components = [];
   arr.forEach((e) => {
@@ -76,16 +54,6 @@ function convert2DArrayToString(arr) {
   return components.join(",").replace(/\s/g, "");
 }
 
-// export const codingContractTypesMetadata: ICodingContractTypeMetadata[] = [
-//     {
-//         desc: (n: number) => {
-//             return ["A prime factor is a factor that is a prime number.",
-//                     `What is the largest prime factor of ${n}?`].join(" ");
-//         },
-//         difficulty: 1,
-//         gen: () => {
-//             return getRandomInt(500, 1e9);
-//         },
 const SOLUTIONS = {
   "Find Largest Prime Factor": (data) => {
     let fac = 2;
